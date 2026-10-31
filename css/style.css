@@ -534,3 +534,276 @@ button:focus-visible {
     }
 
   }
+/* =====================================
+   LUDO ROYALE - MODAL SYSTEM
+===================================== */
+
+.game-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px;
+
+    background: rgba(5, 5, 15, 0.85);
+    backdrop-filter: blur(10px);
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition: 0.3s ease;
+}
+
+.game-modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    position: relative;
+
+    width: 100%;
+    max-width: 430px;
+    max-height: 90vh;
+
+    overflow-y: auto;
+
+    padding: 30px 23px;
+
+    background: #191929;
+
+    border: 1px solid rgba(155,109,255,0.3);
+    border-radius: 22px;
+
+    box-shadow: 0 20px 70px rgba(0,0,0,0.5);
+
+    transform: translateY(20px);
+    transition: 0.3s ease;
+}
+
+.game-modal.active .modal-content {
+    transform: translateY(0);
+}
+
+.modal-close {
+    position: absolute;
+    top: 15px;
+    right: 17px;
+
+    width: 34px;
+    height: 34px;
+
+    border-radius: 10px;
+
+    background: #292940;
+    color: white;
+
+    font-size: 24px;
+}
+
+.modal-heading {
+    text-align: center;
+    margin-bottom: 27px;
+}
+
+.modal-icon {
+    display: block;
+    font-size: 38px;
+    margin-bottom: 13px;
+}
+
+.modal-heading h2 {
+    font-size: 21px;
+    font-weight: 800;
+    margin-bottom: 9px;
+}
+
+.modal-heading p {
+    color: #a5a5bb;
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+/* CHOICE BUTTONS */
+
+.choice-list {
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+}
+
+.choice-button {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    gap: 13px;
+
+    padding: 15px;
+
+    background: #222239;
+    color: white;
+
+    border: 1px solid transparent;
+    border-radius: 13px;
+
+    text-align: left;
+}
+
+.choice-button.selected,
+.player-option.selected {
+    border-color: #9b6dff;
+    background: rgba(155,109,255,0.14);
+}
+
+.choice-button > span:first-child {
+    font-size: 23px;
+}
+
+.choice-button div {
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.choice-button strong {
+    font-size: 13px;
+}
+
+.choice-button small {
+    font-size: 10px;
+    color: #aaaac0;
+}
+
+/* PLAYER OPTIONS */
+
+.player-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 9px;
+    margin-bottom: 22px;
+}
+
+.player-option {
+    min-height: 60px;
+
+    background: #222239;
+    color: white;
+
+    border: 1px solid transparent;
+    border-radius: 12px;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* PRIMARY BUTTON */
+
+.primary-button {
+    width: 100%;
+    min-height: 52px;
+
+    margin-top: 22px;
+
+    border-radius: 13px;
+
+    background: linear-gradient(
+        110deg,
+        #9b6dff,
+        #6540bd
+    );
+
+    color: white;
+
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 1px;
+
+    transition: 0.25s;
+}
+
+.primary-button:active {
+    transform: scale(0.97);
+}
+
+/* SETTINGS */
+
+.settings-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 17px 0;
+
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.settings-row input {
+    width: 20px;
+    height: 20px;
+
+    accent-color: #9b6dff;
+}
+
+.setting-note {
+    padding: 15px;
+
+    margin-top: 15px;
+
+    background: rgba(155,109,255,0.08);
+
+    border-radius: 12px;
+
+    color: #aaaac0;
+
+    font-size: 11px;
+    line-height: 1.8;
+}
+
+/* SELECT INPUTS */
+
+.input-label {
+    display: block;
+
+    margin: 17px 0 9px;
+
+    color: #c7c7dc;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.game-select {
+    width: 100%;
+    padding: 14px;
+
+    border-radius: 11px;
+
+    background: #222239;
+    color: white;
+
+    border: 1px solid #383850;
+
+    font-size: 13px;
+}
+
+/* MOBILE */
+
+@media (max-width: 380px) {
+    .modal-content {
+        padding: 27px 17px;
+    }
+
+    .modal-heading h2 {
+        font-size: 18px;
+    }
+   }
