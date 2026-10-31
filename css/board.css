@@ -1,0 +1,523 @@
+/* ==========================================
+   LUDO ROYALE
+   Professional Ludo Board System
+========================================== */
+
+:root {
+    --board-red: #ed4357;
+    --board-green: #20c982;
+    --board-yellow: #ffc747;
+    --board-blue: #438bff;
+
+    --board-white: #ffffff;
+    --board-border: #dedee8;
+}
+
+/* GAME SCREEN */
+
+.game-screen {
+    width: 100%;
+    min-height: 100vh;
+    padding: 20px 12px 30px;
+
+    background:
+        radial-gradient(
+            circle at 50% 20%,
+            rgba(115,75,190,0.15),
+            transparent 55%
+        ),
+        #10101c;
+}
+
+.game-header {
+    max-width: 600px;
+    margin: 0 auto 20px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.game-title {
+    font-size: 19px;
+    font-weight: 900;
+    letter-spacing: 1px;
+}
+
+.game-title span {
+    color: var(--gold);
+}
+
+.back-button,
+.game-action-button {
+    background: #222239;
+    color: white;
+
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 11px;
+
+    padding: 11px 15px;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* PLAYER STATUS */
+
+.player-status {
+    max-width: 600px;
+    margin: 0 auto 17px;
+
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 9px;
+}
+
+.player-status-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 11px;
+
+    background: #191929;
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px;
+}
+
+.player-status-card.active-player {
+    border-color: var(--gold);
+    background: rgba(244,199,107,0.08);
+}
+
+.player-color {
+    width: 13px;
+    height: 13px;
+
+    border-radius: 50%;
+}
+
+.player-color.red {
+    background: var(--board-red);
+}
+
+.player-color.green {
+    background: var(--board-green);
+}
+
+.player-color.yellow {
+    background: var(--board-yellow);
+}
+
+.player-color.blue {
+    background: var(--board-blue);
+}
+
+.player-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.player-info strong {
+    font-size: 11px;
+}
+
+.player-info small {
+    color: var(--text-muted);
+    font-size: 9px;
+}
+
+/* BOARD CONTAINER */
+
+.board-container {
+    width: 100%;
+    max-width: 540px;
+
+    margin: 0 auto;
+
+    padding: 7px;
+
+    background: #dedee8;
+
+    border-radius: 15px;
+
+    box-shadow:
+        0 15px 45px rgba(0,0,0,0.4),
+        0 0 35px rgba(155,109,255,0.12);
+}
+
+.ludo-board {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+
+    display: grid;
+
+    grid-template-columns: repeat(15, 1fr);
+    grid-template-rows: repeat(15, 1fr);
+
+    background: white;
+
+    overflow: hidden;
+
+    border-radius: 8px;
+}
+
+/* BOARD CELLS */
+
+.board-cell {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: white;
+
+    border: 0.5px solid #e3e3eb;
+
+    min-width: 0;
+    min-height: 0;
+}
+
+.board-cell.track {
+    background: #ffffff;
+}
+
+.board-cell.safe {
+    background: #f1edff;
+}
+
+.board-cell.home-path.red {
+    background: var(--board-red);
+}
+
+.board-cell.home-path.green {
+    background: var(--board-green);
+}
+
+.board-cell.home-path.yellow {
+    background: var(--board-yellow);
+}
+
+.board-cell.home-path.blue {
+    background: var(--board-blue);
+}
+
+/* HOME BASES */
+
+.home-base {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 9%;
+
+    position: relative;
+}
+
+.home-base.red {
+    background: var(--board-red);
+}
+
+.home-base.green {
+    background: var(--board-green);
+}
+
+.home-base.yellow {
+    background: var(--board-yellow);
+}
+
+.home-base.blue {
+    background: var(--board-blue);
+}
+
+.home-inner {
+    width: 100%;
+    height: 100%;
+
+    background: white;
+
+    border-radius: 10px;
+
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+
+    gap: 8%;
+
+    padding: 12%;
+}
+
+.token-slot {
+    background: rgba(255,255,255,0.95);
+
+    border: 3px solid rgba(0,0,0,0.12);
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.token-slot::after {
+    content: "";
+
+    width: 55%;
+    height: 55%;
+
+    border-radius: 50%;
+
+    background: rgba(0,0,0,0.06);
+}
+
+/* CENTRAL AREA */
+
+.board-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: relative;
+
+    overflow: hidden;
+
+    background: white;
+}
+
+.center-triangle {
+    position: absolute;
+
+    width: 0;
+    height: 0;
+
+    border-style: solid;
+}
+
+.center-triangle.red {
+    top: 0;
+    left: 0;
+
+    border-width: 0 0 100% 100%;
+    border-color: transparent transparent transparent var(--board-red);
+}
+
+.center-triangle.green {
+    top: 0;
+    right: 0;
+
+    border-width: 100% 0 0 100%;
+    border-color: var(--board-green) transparent transparent transparent;
+}
+
+.center-triangle.yellow {
+    bottom: 0;
+    right: 0;
+
+    border-width: 0 100% 100% 0;
+    border-color: transparent var(--board-yellow) transparent transparent;
+}
+
+.center-triangle.blue {
+    bottom: 0;
+    left: 0;
+
+    border-width: 100% 100% 0 0;
+    border-color: transparent transparent var(--board-blue) transparent;
+}
+
+.center-logo {
+    position: relative;
+    z-index: 2;
+
+    width: 34%;
+    height: 34%;
+
+    border-radius: 50%;
+
+    background: #191929;
+    border: 3px solid white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: var(--gold);
+    font-size: clamp(12px, 4vw, 25px);
+}
+
+/* TOKENS */
+
+.ludo-token {
+    width: 85%;
+    height: 85%;
+
+    max-width: 25px;
+    max-height: 25px;
+
+    border-radius: 50%;
+
+    border: 2px solid rgba(255,255,255,0.9);
+
+    box-shadow:
+        0 2px 4px rgba(0,0,0,0.35),
+        inset 0 -3px 0 rgba(0,0,0,0.15);
+
+    cursor: pointer;
+
+    position: relative;
+
+    z-index: 5;
+
+    transition: transform 0.2s ease;
+}
+
+.ludo-token:hover {
+    transform: scale(1.15);
+}
+
+.ludo-token.red {
+    background: var(--board-red);
+}
+
+.ludo-token.green {
+    background: var(--board-green);
+}
+
+.ludo-token.yellow {
+    background: var(--board-yellow);
+}
+
+.ludo-token.blue {
+    background: var(--board-blue);
+}
+
+/* DICE AREA */
+
+.dice-panel {
+    max-width: 540px;
+    margin: 22px auto 0;
+
+    padding: 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+
+    background: #191929;
+
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 15px;
+}
+
+.dice-information {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.dice-information strong {
+    font-size: 13px;
+}
+
+.dice-information small {
+    color: var(--text-muted);
+    font-size: 10px;
+}
+
+.dice-button {
+    width: 65px;
+    height: 65px;
+
+    background: white;
+    color: #191929;
+
+    border-radius: 14px;
+
+    font-size: 35px;
+
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.dice-button:active {
+    transform: scale(0.94);
+}
+
+.dice-button.rolling {
+    animation: diceRoll 0.5s ease;
+}
+
+@keyframes diceRoll {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    50% {
+        transform: rotate(180deg) scale(0.8);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* GAME CONTROLS */
+
+.game-controls {
+    max-width: 540px;
+    margin: 15px auto 0;
+
+    display: flex;
+    gap: 10px;
+}
+
+.game-controls button {
+    flex: 1;
+    min-height: 45px;
+
+    background: #222239;
+    color: white;
+
+    border-radius: 11px;
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 380px) {
+
+    .game-screen {
+        padding: 15px 7px;
+    }
+
+    .board-container {
+        padding: 4px;
+    }
+
+    .dice-panel {
+        padding: 13px;
+    }
+
+    .dice-button {
+        width: 55px;
+        height: 55px;
+    }
+
+}
+
+@media (min-width: 700px) {
+
+    .game-screen {
+        padding-top: 30px;
+    }
+
+    .board-container {
+        padding: 10px;
+    }
+
+  }
