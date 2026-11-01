@@ -491,10 +491,24 @@ const App = {
 
     appRoot.appendChild(gameScreen);
 
-    // Generate the actual Ludo board
-    const board = gameScreen.querySelector("#ludoBoard");
+    // Connect the dice engine
+const diceButton = gameScreen.querySelector("#rollDice");
+const diceInformation = gameScreen.querySelector("#diceInformation");
 
-    LudoBoard.render(board);
+diceButton.addEventListener("click", async () => {
+
+    const result = await LudoDice.animate(diceButton);
+
+    if (result === null) {
+        return;
+    }
+
+    diceInformation.textContent =
+        `You rolled a ${result}!`;
+
+    console.log("Dice result:", result);
+
+ });
 
     // Return to main menu
     document.getElementById("backToMenu")
