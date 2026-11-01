@@ -468,14 +468,77 @@ const App = {
 
     prepareGame() {
 
-        this.closeModal();
+    this.closeModal();
 
-        console.log("Selected match configuration:", this.state);
+    console.log(
+        "Selected match configuration:",
+        this.state
+    );
 
-        alert(
-            "Match configuration saved! " +
-            "The playable game engine is coming next."
-        );
+    const appRoot = document.getElementById("app");
+    const mainScreen = document.getElementById("mainScreen");
+
+    if (!window.LudoGameScreen || !window.LudoBoard) {
+        alert("Game files could not be loaded. Please refresh the page.");
+        return;
+    }
+
+    // Hide the main menu
+    mainScreen.style.display = "none";
+
+    // Create the game screen
+    const gameScreen = LudoGameScreen.create(this.state);
+
+    appRoot.appendChild(gameScreen);
+
+    // Generate the actual Ludo board
+    const board = gameScreen.querySelector("#ludoBoard");
+
+    LudoBoard.render(board);
+
+    // Return to main menu
+    document.getElementById("backToMenu")
+        .addEventListener("click", () => {
+
+            gameScreen.remove();
+
+            mainScreen.style.display = "";
+
+        });
+
+    // Open game settings
+    document.getElementById("gameSettings")
+        .addEventListener("click", () => {
+
+            this.showSettings();
+
+        });
+
+    // Restart board display
+    document.getElementById("restartGame")
+        .addEventListener("click", () => {
+
+            LudoBoard.render(board);
+
+            alert("The board has been reset.");
+
+        });
+
+    // Temporary help information
+    document.getElementById("gameHelp")
+        .addEventListener("click", () => {
+
+            alert(
+                "LUDO ROYALE\n\n" +
+                "Roll the dice and move your tokens.\n" +
+                "The playable rules and movement system " +
+                "will be connected in the next stages."
+            );
+
+        });
+
+    console.log("Ludo Royale game screen opened successfully.");
+
     }
 
 };
