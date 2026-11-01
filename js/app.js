@@ -491,6 +491,66 @@ const App = {
 
     appRoot.appendChild(gameScreen);
 
+    // Generate the actual Ludo board
+const board = gameScreen.querySelector("#ludoBoard");
+
+LudoBoard.render(board);
+       
+    // Initialise the match state
+const matchState = LudoState.create(this.state);
+
+// Attach match state to the game screen
+gameScreen.gameState = matchState;
+
+// Get player information elements
+const playerCards = gameScreen.querySelectorAll(
+    ".player-status-card"
+);
+
+const turnInformation = gameScreen.querySelector(
+    "#turnInformation"
+);
+
+// Update player information
+function updatePlayerDisplay() {
+
+    matchState.colors.forEach(color => {
+
+        const player = matchState.players[color];
+
+        const card = gameScreen.querySelector(
+            `[data-player="${color}"]`
+        );
+
+        if (!card) return;
+
+        card.querySelector("strong").textContent =
+            player.name;
+
+        card.querySelector("small").textContent =
+            player.type === "computer"
+                ? "Computer"
+                : "Human Player";
+
+        card.classList.toggle(
+            "active-player",
+            color === matchState.currentPlayer
+        );
+
+    });
+
+    const currentPlayer =
+        matchState.players[matchState.currentPlayer];
+
+    turnInformation.textContent =
+        `${currentPlayer.name}'s Turn`;
+
+}
+
+updatePlayerDisplay();
+
+console.log("Match state initialised:", matchState);
+
     // Connect the dice engine
 const diceButton = gameScreen.querySelector("#rollDice");
 const diceInformation = gameScreen.querySelector("#diceInformation");
