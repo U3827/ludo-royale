@@ -1,7 +1,7 @@
 /* ==========================================
    LUDO ROYALE
    Application Controller
-   Version 1.0
+   Version 2.0
 ========================================== */
 
 "use strict";
@@ -18,10 +18,12 @@ const App = {
     },
 
     init() {
+
         this.bindEvents();
         this.createModal();
 
         console.log("LUDO ROYALE initialized successfully.");
+
     },
 
     bindEvents() {
@@ -45,6 +47,7 @@ const App = {
             .addEventListener("click", () => {
                 this.showSettings();
             });
+
     },
 
     createModal() {
@@ -68,7 +71,7 @@ const App = {
 
         document.body.appendChild(modal);
 
-        modal.addEventListener("click", (event) => {
+        modal.addEventListener("click", event => {
 
             if (event.target === modal) {
                 this.closeModal();
@@ -80,6 +83,7 @@ const App = {
             .addEventListener("click", () => {
                 this.closeModal();
             });
+
     },
 
     openModal(content) {
@@ -90,6 +94,7 @@ const App = {
             .classList.add("active");
 
         document.body.style.overflow = "hidden";
+
     },
 
     closeModal() {
@@ -98,6 +103,7 @@ const App = {
             .classList.remove("active");
 
         document.body.style.overflow = "";
+
     },
 
     selectMode(mode) {
@@ -115,6 +121,7 @@ const App = {
         else if (mode === "mixed") {
             this.showMixedPlayers();
         }
+
     },
 
     showDifficulty() {
@@ -122,11 +129,13 @@ const App = {
         this.openModal(`
 
             <div class="modal-heading">
+
                 <span class="modal-icon">🤖</span>
 
                 <h2>Choose Your Challenge</h2>
 
                 <p>Select your opponent's intelligence.</p>
+
             </div>
 
             <div class="choice-list">
@@ -166,7 +175,7 @@ const App = {
 
                     <div>
                         <strong>Hard</strong>
-                        <small>Advanced strategic opponents.</small>
+                        <small>More strategic computer opponents.</small>
                     </div>
 
                     <span>›</span>
@@ -207,6 +216,7 @@ const App = {
             .addEventListener("click", () => {
                 this.showComputerPlayers();
             });
+
     },
 
     showComputerPlayers() {
@@ -240,7 +250,7 @@ const App = {
             </div>
 
             <div class="setting-note">
-                You will play as Blue. Other players will
+                You will play as Red. Other players will
                 be controlled by the computer.
             </div>
 
@@ -259,6 +269,7 @@ const App = {
             .addEventListener("click", () => {
                 this.prepareGame();
             });
+
     },
 
     showLocalPlayers() {
@@ -311,6 +322,7 @@ const App = {
             .addEventListener("click", () => {
                 this.prepareGame();
             });
+
     },
 
     showMixedPlayers() {
@@ -370,15 +382,22 @@ const App = {
                     Number(document.getElementById("totalCount").value);
 
                 if (humans >= total) {
-                    alert("Please leave at least one computer opponent.");
+
+                    alert(
+                        "Please leave at least one computer opponent."
+                    );
+
                     return;
+
                 }
 
                 this.state.humanPlayers = humans;
                 this.state.players = total;
 
                 this.prepareGame();
+
             });
+
     },
 
     bindPlayerOptions() {
@@ -401,6 +420,7 @@ const App = {
                 });
 
             });
+
     },
 
     showSettings() {
@@ -438,9 +458,8 @@ const App = {
             </div>
 
             <p class="setting-note">
-                Blue Advantage is an optional experimental
-                mode that changes the game's probabilities.
-                All players should agree before using it.
+                Blue Advantage is an experimental option.
+                Its gameplay effect will be implemented separately.
             </p>
 
             <button class="primary-button"
@@ -464,162 +483,647 @@ const App = {
                 this.closeModal();
 
             });
+
     },
 
     prepareGame() {
 
-    this.closeModal();
+        this.closeModal();
 
-    console.log(
-        "Selected match configuration:",
-        this.state
-    );
+        const appRoot = document.getElementById("app");
+        const mainScreen = document.getElementById("mainScreen");
 
-    const appRoot = document.getElementById("app");
-    const mainScreen = document.getElementById("mainScreen");
-
-    if (!window.LudoGameScreen || !window.LudoBoard) {
-        alert("Game files could not be loaded. Please refresh the page.");
-        return;
-    }
-
-    // Hide the main menu
-    mainScreen.style.display = "none";
-
-    // Create the game screen
-    const gameScreen = LudoGameScreen.create(this.state);
-
-    appRoot.appendChild(gameScreen);
-
-    // Initialise the match state
-    const matchState = LudoState.create(this.state);
-
-    // Attach match state to the game screen
-    gameScreen.gameState = matchState;
-
-    // Generate the actual Ludo board
-    const board = gameScreen.querySelector("#ludoBoard");
-
-    LudoBoard.render(board);
-
-   // Display player tokens in their home bases
-   LudoTokens.renderHomeTokens(matchState, board);
-
-   // Get player information elements
-   const playerCards = gameScreen.querySelectorAll(
-    ".player-status-card"
-   );
-
-  const turnInformation = gameScreen.querySelector(
-    "#turnInformation"
-  );
-
-   // Update player information
-  function updatePlayerDisplay() {
-
-    matchState.colors.forEach(color => {
-
-        const player = matchState.players[color];
-
-        const card = gameScreen.querySelector(
-            `[data-player="${color}"]`
-        );
-
-        if (!card) return;
-
-        card.querySelector("strong").textContent =
-            player.name;
-
-        card.querySelector("small").textContent =
-            player.type === "computer"
-                ? "Computer"
-                : "Human Player";
-
-        card.classList.toggle(
-            "active-player",
-            color === matchState.currentPlayer
-        );
-
-    });
-
-    const currentPlayer =
-        matchState.players[matchState.currentPlayer];
-
-    turnInformation.textContent =
-        `${currentPlayer.name}'s Turn`;
-
-}
-
-updatePlayerDisplay();
-
-console.log("Match state initialised:", matchState);
-
-    // Connect the dice engine
-const diceButton = gameScreen.querySelector("#rollDice");
-const diceInformation = gameScreen.querySelector("#diceInformation");
-
-diceButton.addEventListener("click", async () => {
-
-    const result = await LudoDice.animate(diceButton);
-
-    if (result === null) {
-        return;
-    }
-
-    diceInformation.textContent =
-        `You rolled a ${result}!`;
-
-    console.log("Dice result:", result);
-
- });
-
-    // Return to main menu
-    document.getElementById("backToMenu")
-        .addEventListener("click", () => {
-
-            gameScreen.remove();
-
-            mainScreen.style.display = "";
-
-        });
-
-    // Open game settings
-    document.getElementById("gameSettings")
-        .addEventListener("click", () => {
-
-            this.showSettings();
-
-        });
-
-    // Restart board display
-    document.getElementById("restartGame")
-        .addEventListener("click", () => {
-
-            LudoBoard.render(board);
-
-            alert("The board has been reset.");
-
-        });
-
-    // Temporary help information
-    document.getElementById("gameHelp")
-        .addEventListener("click", () => {
+        if (
+            !window.LudoGameScreen ||
+            !window.LudoBoard ||
+            !window.LudoState ||
+            !window.LudoRules ||
+            !window.LudoMovement ||
+            !window.LudoDice
+        ) {
 
             alert(
-                "LUDO ROYALE\n\n" +
-                "Roll the dice and move your tokens.\n" +
-                "The playable rules and movement system " +
-                "will be connected in the next stages."
+                "Some game files could not be loaded. Please refresh."
             );
+
+            return;
+
+        }
+
+        mainScreen.style.display = "none";
+
+        const gameScreen = LudoGameScreen.create(this.state);
+
+        appRoot.appendChild(gameScreen);
+
+        let matchState = LudoState.create(this.state);
+
+        gameScreen.gameState = matchState;
+
+        const board = gameScreen.querySelector("#ludoBoard");
+
+        const diceButton = gameScreen.querySelector("#rollDice");
+
+        const diceInformation =
+            gameScreen.querySelector("#diceInformation");
+
+        const turnInformation =
+            gameScreen.querySelector("#turnInformation");
+
+        let isProcessingMove = false;
+        let computerTimer = null;
+
+        LudoBoard.render(board);
+
+        // ==================================
+        // UPDATE GAME DISPLAY
+        // ==================================
+
+        function refreshGame() {
+
+            LudoMovement.render(matchState, board);
+
+            matchState.colors.forEach(color => {
+
+                const player = matchState.players[color];
+
+                const card = gameScreen.querySelector(
+                    `[data-player="${color}"]`
+                );
+
+                if (!card) return;
+
+                card.querySelector("strong").textContent =
+                    player.name;
+
+                card.querySelector("small").textContent =
+                    player.type === "computer"
+                        ? "Computer"
+                        : "Human Player";
+
+                card.classList.toggle(
+                    "active-player",
+                    color === matchState.currentPlayer
+                );
+
+            });
+
+            const currentPlayer =
+                matchState.players[matchState.currentPlayer];
+
+            turnInformation.textContent =
+                `${currentPlayer.name}'s Turn`;
+
+            gameScreen.gameState = matchState;
+
+        }
+
+        function showMessage(message) {
+
+            diceInformation.textContent = message;
+
+        }
+
+        // ==================================
+        // COMPUTER DECISION SYSTEM
+        // ==================================
+
+        function chooseComputerMove(moves, color) {
+
+            const difficulty = matchState.difficulty;
+
+            if (difficulty === "easy") {
+
+                return moves[
+                    Math.floor(Math.random() * moves.length)
+                ];
+
+            }
+
+            let bestMove = moves[0];
+            let bestScore = -Infinity;
+
+            moves.forEach(move => {
+
+                const destination =
+                    LudoRules.calculateMovement(
+                        move.progress,
+                        matchState.diceValue
+                    );
+
+                let score = Math.random() * 3;
+
+                // Reward leaving the base
+                if (move.progress === -1) {
+                    score += 15;
+                }
+
+                // Reward reaching the finish
+                if (destination === 57) {
+                    score += 100;
+                }
+
+                // Reward capturing opponents
+                const captures = LudoRules.getCaptures(
+                    matchState,
+                    color,
+                    destination
+                );
+
+                score += captures.length *
+                    (difficulty === "hard" ? 35 : 20);
+
+                // Reward safe positions
+                if (destination >= 0 && destination <= 51) {
+
+                    const globalPosition =
+                        LudoRules.getGlobalPosition(
+                            color,
+                            destination
+                        );
+
+                    if (
+                        LudoRules.isSafePosition(globalPosition)
+                    ) {
+
+                        score +=
+                            difficulty === "hard" ? 15 : 8;
+
+                    }
+
+                }
+
+                if (score > bestScore) {
+
+                    bestScore = score;
+                    bestMove = move;
+
+                }
+
+            });
+
+            return bestMove;
+
+        }
+
+        // ==================================
+        // COMPUTER TURN SCHEDULER
+        // ==================================
+
+        function scheduleComputerTurn() {
+
+            clearTimeout(computerTimer);
+
+            if (matchState.status !== "playing") {
+                return;
+            }
+
+            const player =
+                matchState.players[matchState.currentPlayer];
+
+            if (player.type === "human") {
+
+                diceButton.disabled = false;
+
+                return;
+
+            }
+
+            diceButton.disabled = true;
+
+            showMessage(`${player.name} is thinking...`);
+
+            computerTimer = setTimeout(() => {
+
+                rollForCurrentPlayer(true);
+
+            }, 1000);
+
+        }
+
+        // ==================================
+        // ROLL DICE
+        // ==================================
+
+        async function rollForCurrentPlayer(isComputer = false) {
+
+            if (
+                isProcessingMove ||
+                matchState.status !== "playing" ||
+                matchState.diceValue !== null
+            ) {
+                return;
+            }
+
+            isProcessingMove = true;
+
+            diceButton.disabled = true;
+
+            const result = await LudoDice.animate(diceButton);
+
+            if (result === null) {
+
+                isProcessingMove = false;
+
+                scheduleComputerTurn();
+
+                return;
+
+            }
+
+            const color = matchState.currentPlayer;
+
+            matchState.diceValue = result;
+
+            if (result === 6) {
+
+                matchState.consecutiveSixes++;
+
+            } else {
+
+                matchState.consecutiveSixes = 0;
+
+            }
+
+            showMessage(
+                `${color.toUpperCase()} rolled ${result}.`
+            );
+
+            // Three consecutive sixes
+            if (matchState.consecutiveSixes >= 3) {
+
+                showMessage(
+                    "Three consecutive sixes! Turn lost."
+                );
+
+                matchState.consecutiveSixes = 0;
+
+                matchState.diceValue = null;
+                matchState.legalMoves = [];
+
+                LudoState.nextTurn(matchState);
+
+                refreshGame();
+
+                isProcessingMove = false;
+
+                scheduleComputerTurn();
+
+                return;
+
+            }
+
+            // Identify legal token movements
+            matchState.legalMoves =
+                LudoMovement.getAvailableMoves(
+                    matchState,
+                    result
+                );
+
+            // No available movement
+            if (matchState.legalMoves.length === 0) {
+
+                matchState.diceValue = null;
+                matchState.legalMoves = [];
+
+                isProcessingMove = false;
+
+                if (result === 6) {
+
+                    showMessage(
+                        "No legal moves, but six gives another roll."
+                    );
+
+                    diceButton.disabled = false;
+
+                    return;
+
+                }
+
+                showMessage(
+                    "No legal moves. Next player's turn."
+                );
+
+                matchState.consecutiveSixes = 0;
+
+                LudoState.nextTurn(matchState);
+
+                refreshGame();
+
+                scheduleComputerTurn();
+
+                return;
+
+            }
+
+            isProcessingMove = false;
+
+            // Computer selects a token automatically
+            if (isComputer) {
+
+                const selectedMove = chooseComputerMove(
+                    matchState.legalMoves,
+                    color
+                );
+
+                showMessage(
+                    `${color.toUpperCase()} is moving a token...`
+                );
+
+                computerTimer = setTimeout(() => {
+
+                    completeTokenMove(
+                        selectedMove.tokenIndex
+                    );
+
+                }, 800);
+
+                return;
+
+            }
+
+                        // Highlight selectable human tokens
+            refreshGame();
+
+            matchState.legalMoves.forEach(move => {
+
+                const token = board.querySelector(
+                    `.ludo-token[data-color="${color}"]` +
+                    `[data-token-index="${move.tokenIndex}"]`
+                );
+
+                if (token) {
+
+                    token.style.outline = "3px solid white";
+                    token.style.cursor = "pointer";
+
+                }
+
+            });
+
+            diceButton.disabled = true;
+
+            showMessage(
+                "Select one of your highlighted tokens."
+            );
+
+        }
+
+
+        // ==================================
+        // COMPLETE TOKEN MOVEMENT
+        // ==================================
+
+        function completeTokenMove(tokenIndex) {
+
+            if (
+                isProcessingMove ||
+                matchState.diceValue === null
+            ) {
+                return;
+            }
+
+            const color = matchState.currentPlayer;
+
+            const selectedMove = matchState.legalMoves.find(
+                move => move.tokenIndex === tokenIndex
+            );
+
+            if (!selectedMove) return;
+
+            isProcessingMove = true;
+
+            const rolledNumber = matchState.diceValue;
+
+            const result = LudoMovement.move(
+                matchState,
+                color,
+                tokenIndex,
+                rolledNumber
+            );
+
+            if (!result.success) {
+
+                isProcessingMove = false;
+                showMessage(result.message);
+
+                return;
+
+            }
+
+            Object.assign(matchState, result.state);
+
+            LudoState.recordMove(matchState, {
+                color,
+                tokenIndex,
+                diceValue: rolledNumber,
+                destination: result.destination,
+                captures: result.captures
+            });
+
+            const winner = LudoState.checkWinner(matchState);
+
+            matchState.diceValue = null;
+            matchState.legalMoves = [];
+
+            refreshGame();
+
+            if (winner) {
+
+                showMessage(
+                    `${winner.toUpperCase()} WINS LUDO ROYALE!`
+                );
+
+                diceButton.disabled = true;
+                isProcessingMove = false;
+
+                alert(`${winner.toUpperCase()} PLAYER WINS! 🏆`);
+
+                return;
+
+            }
+
+            if (result.captures.length > 0) {
+
+                showMessage(
+                    `${result.captures.length} opponent token(s) captured!`
+                );
+
+            }
+
+            if (rolledNumber === 6) {
+
+                showMessage(
+                    `${color.toUpperCase()} rolled six! Roll again.`
+                );
+
+            } else {
+
+                matchState.consecutiveSixes = 0;
+
+                LudoState.nextTurn(matchState);
+
+            }
+
+            refreshGame();
+
+            isProcessingMove = false;
+
+            scheduleComputerTurn();
+
+        }
+
+
+        // ==================================
+        // TOKEN SELECTION
+        // ==================================
+
+        board.addEventListener("click", event => {
+
+            const token = event.target.closest(".ludo-token");
+
+            if (!token) return;
+
+            if (
+                matchState.status !== "playing" ||
+                matchState.diceValue === null ||
+                isProcessingMove
+            ) {
+                return;
+            }
+
+            const color = token.dataset.color;
+
+            if (color !== matchState.currentPlayer) return;
+
+            const currentPlayer =
+                matchState.players[matchState.currentPlayer];
+
+            if (currentPlayer.type === "computer") return;
+
+            const tokenIndex =
+                Number(token.dataset.tokenIndex);
+
+            completeTokenMove(tokenIndex);
 
         });
 
-    console.log("Ludo Royale game screen opened successfully.");
+
+        // ==================================
+        // DICE BUTTON
+        // ==================================
+
+        diceButton.addEventListener("click", () => {
+
+            rollForCurrentPlayer(false);
+
+        });
+
+
+        // ==================================
+        // RETURN TO MAIN MENU
+        // ==================================
+
+        gameScreen.querySelector("#backToMenu")
+            .addEventListener("click", () => {
+
+                clearTimeout(computerTimer);
+
+                gameScreen.remove();
+
+                mainScreen.style.display = "";
+
+            });
+
+
+        // ==================================
+        // GAME SETTINGS
+        // ==================================
+
+        gameScreen.querySelector("#gameSettings")
+            .addEventListener("click", () => {
+
+                this.showSettings();
+
+            });
+
+
+        // ==================================
+        // RESTART MATCH
+        // ==================================
+
+        gameScreen.querySelector("#restartGame")
+            .addEventListener("click", () => {
+
+                if (!confirm("Are you sure you want to restart?")) {
+                    return;
+                }
+
+                clearTimeout(computerTimer);
+
+                matchState = LudoState.create(this.state);
+
+                gameScreen.gameState = matchState;
+
+                diceButton.disabled = false;
+                diceButton.textContent = "🎲";
+
+                isProcessingMove = false;
+
+                LudoBoard.render(board);
+
+                refreshGame();
+
+                showMessage("New match started. Roll the dice.");
+
+                scheduleComputerTurn();
+
+            });
+
+
+        // ==================================
+        // GAME HELP
+        // ==================================
+
+        gameScreen.querySelector("#gameHelp")
+            .addEventListener("click", () => {
+
+                alert(
+                    "LUDO ROYALE\n\n" +
+                    "1. Roll a six to bring a token out of its base.\n" +
+                    "2. Select a highlighted token to move it.\n" +
+                    "3. Capture opponents on unprotected squares.\n" +
+                    "4. Rolling six gives another roll.\n" +
+                    "5. Three consecutive sixes lose the turn.\n" +
+                    "6. Finish all four tokens to win."
+                );
+
+            });
+
+
+        // ==================================
+        // START MATCH
+        // ==================================
+
+        refreshGame();
+
+        showMessage("Roll the dice to begin.");
+
+        scheduleComputerTurn();
+
+        console.log(
+            "LUDO ROYALE match started:",
+            matchState
+        );
 
     }
 
 };
 
+
+// Initialise application
 document.addEventListener("DOMContentLoaded", () => {
+
     App.init();
+
 });
