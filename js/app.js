@@ -491,28 +491,31 @@ const App = {
 
     appRoot.appendChild(gameScreen);
 
-    // Generate the actual Ludo board
-const board = gameScreen.querySelector("#ludoBoard");
-
-LudoBoard.render(board);
-       
     // Initialise the match state
-const matchState = LudoState.create(this.state);
+    const matchState = LudoState.create(this.state);
 
-// Attach match state to the game screen
-gameScreen.gameState = matchState;
+    // Attach match state to the game screen
+    gameScreen.gameState = matchState;
 
-// Get player information elements
-const playerCards = gameScreen.querySelectorAll(
+    // Generate the actual Ludo board
+    const board = gameScreen.querySelector("#ludoBoard");
+
+    LudoBoard.render(board);
+
+   // Display player tokens in their home bases
+   LudoTokens.renderHomeTokens(matchState, board);
+
+   // Get player information elements
+   const playerCards = gameScreen.querySelectorAll(
     ".player-status-card"
-);
+   );
 
-const turnInformation = gameScreen.querySelector(
+  const turnInformation = gameScreen.querySelector(
     "#turnInformation"
-);
+  );
 
-// Update player information
-function updatePlayerDisplay() {
+   // Update player information
+  function updatePlayerDisplay() {
 
     matchState.colors.forEach(color => {
 
